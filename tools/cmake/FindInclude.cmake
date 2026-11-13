@@ -1,0 +1,17 @@
+# 递归收集目录下所有 .h/.hpp 所在的子目录，拼成 include 路径列表
+# 用法：find_include_dir(<结果变量> <根目录>)
+# 借自 PinyCaster，作用是不用一个个手写 APP 模块的头文件目录
+macro(FIND_INCLUDE_DIR result curdir)
+  file(GLOB_RECURSE children "${curdir}/*.hpp" "${curdir}/*.h")
+  set(dirlist "")
+  foreach(child ${children})
+    string(REGEX REPLACE "(.*)/.*" "\\1" LIB_NAME ${child})
+    if(IS_DIRECTORY ${LIB_NAME})
+      list(FIND dirlist ${LIB_NAME} list_index)
+      if(${list_index} LESS 0)
+        list(APPEND dirlist ${LIB_NAME})
+      endif()
+    endif()
+  endforeach()
+  set(${result} ${dirlist})
+endmacro()

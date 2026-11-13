@@ -1,0 +1,45 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "DAP",
+			"type": "cortex-debug",
+			"request": "launch",
+			"showDevDebugOutput": "none",
+			"cwd": "${workspaceFolder}",
+			"executable": "./build/cubemax/JoyStick1.elf",
+			"servertype": "openocd",
+			"device": "stm32f411ceux",
+			"configFiles": [
+				"${workspaceFolder}/openocd/dap.cfg",
+				"target/stm32f4x.cfg"
+			],
+			"armToolchainPath": "D:\\APP\\devEnvCong\\toolchain\\bin",
+			"liveWatch": {
+				"enabled": true,
+				"samplesPerSecond": 10
+			},
+			"preLaunchTask": "build"
+		},
+		{
+			"name": "ST-Link",
+			"type": "cortex-debug",
+			"request": "launch",
+			"showDevDebugOutput": "none",
+			"cwd": "${workspaceFolder}",
+			"executable": "./build/cubemax/JoyStick1.elf",
+			"servertype": "openocd",
+			"device": "stm32f411ceux",
+			"configFiles": [
+				"${workspaceFolder}/openocd/stlink.cfg",
+				"target/stm32f4x.cfg"
+			],
+			"armToolchainPath": "D:\\APP\\devEnvCong\\toolchain\\bin",
+			"liveWatch": {
+				"enabled": true,
+				"samplesPerSecond": 10
+			},
+			"preLaunchTask": "build"
+		}
+	]
+}

@@ -1,0 +1,9 @@
+CompileFlags:
+  CompilationDatabase: .
+
+Diagnostics:
+  UnusedIncludes: None
+  Includes:
+    IgnoreHeader:
+      - '.*main\.h'
+      - '.*stm32f4xx\.h'

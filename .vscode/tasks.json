@@ -1,0 +1,109 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "configure",
+			"type": "shell",
+			"command": "cmake -B build -G Ninja",
+			"options": { "cwd": "${workspaceFolder}" },
+			"detail": "生成构建目录 build/",
+			"problemMatcher": []
+		},
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "ninja -C build",
+			"options": { "cwd": "${workspaceFolder}" },
+			"detail": "编译固件",
+			"group": { "kind": "build", "isDefault": true },
+			"problemMatcher": []
+		},
+		{
+			"label": "configure + build",
+			"dependsOn": ["configure", "build"],
+			"dependsOrder": "sequence",
+			"problemMatcher": []
+		},
+		{
+			"label": "clean",
+			"type": "shell",
+			"command": "cmake --build build --target clean",
+			"options": { "cwd": "${workspaceFolder}" },
+			"detail": "清掉编译产物（保留 build 目录）",
+			"problemMatcher": []
+		},
+
+		{
+			"label": "清理残留 openocd",
+			"type": "shell",
+			"command": "Get-Process -Name openocd -ErrorAction SilentlyContinue | Stop-Process -Force",
+			"options": { "cwd": "${workspaceFolder}" },
+			"detail": "F5 调试失败后 openocd 会残留并占着探针，烧录报 DEV_CONNECT_ERR / LIBUSB_ERROR_IO 时先跑这个",
+			"problemMatcher": []
+		},
+		{
+			"label": "flash: stlink",
+			"type": "shell",
+			"command": "D:/APP/bin/STM32_Programmer_CLI.exe",
+			"args": [
+				"-c", "port=SWD",
+				"-e", "all",
+				"-w", "${workspaceFolder}/build/cubemax/JoyStick1.hex",
+				"-v",
+				"-rst"
+			],
+			"options": { "cwd": "${workspaceFolder}" },
+			"detail": "全片擦除 + 烧 hex + 校验 + 复位运行（ST-Link 走 CubeProgrammer CLI，hex 带地址不用指定起始）",
+			"dependsOn": ["build"],
+			"presentation": { "group": "flash", "reveal": "always", "clear": true },
+			"problemMatcher": []
+		},
+		{
+			"label": "flash: stlink (elf)",
+			"type": "shell",
+			"command": "D:/APP/bin/STM32_Programmer_CLI.exe",
+			"args": [
+				"-c", "port=SWD",
+				"-e", "all",
+				"-w", "${workspaceFolder}/build/cubemax/JoyStick1.elf",
+				"-v",
+				"-rst"
+			],
+			"options": { "cwd": "${workspaceFolder}" },
+			"detail": "同上，但烧 elf（elf 自带调试信息和段地址）",
+			"dependsOn": ["build"],
+			"presentation": { "group": "flash", "reveal": "always", "clear": true },
+			"problemMatcher": []
+		},
+		{
+			"label": "erase: stlink",
+			"type": "shell",
+			"command": "D:/APP/bin/STM32_Programmer_CLI.exe",
+			"args": ["-c", "port=SWD", "-e", "all"],
+			"options": { "cwd": "${workspaceFolder}" },
+			"detail": "只做全片擦除（擦完芯片是空的，必须再烧一次才有程序）",
+			"presentation": { "group": "flash", "reveal": "always", "clear": true },
+			"problemMatcher": []
+		},
+		{
+			"label": "flash: stlink (openocd)",
+			"type": "shell",
+			"command": "openocd -f openocd/stlink.cfg -f target/stm32f4x.cfg -c \"program build/cubemax/JoyStick1.elf verify reset exit\"",
+			"options": { "cwd": "${workspaceFolder}" },
+			"detail": "备用：ST-Link 走 OpenOCD（和 openocd/dap.cfg 同一套写法）",
+			"dependsOn": ["build"],
+			"presentation": { "group": "flash", "reveal": "always", "clear": true },
+			"problemMatcher": []
+		},
+		{
+			"label": "flash: daplink",
+			"type": "shell",
+			"command": "openocd -f openocd/dap.cfg -f target/stm32f4x.cfg -c \"program build/cubemax/JoyStick1.elf verify reset exit\"",
+			"options": { "cwd": "${workspaceFolder}" },
+			"detail": "烧录 (CMSIS-DAP / OpenOCD) 并复位运行",
+			"dependsOn": ["build"],
+			"presentation": { "group": "flash", "reveal": "always", "clear": true },
+			"problemMatcher": []
+		}
+	]
+}

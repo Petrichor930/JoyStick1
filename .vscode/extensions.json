@@ -1,0 +1,15 @@
+{
+	"recommendations": [
+		"llvm-vs-code-extensions.vscode-clangd",
+		"xaver.clang-format",
+		"marus25.cortex-debug",
+		"seunlanlege.action-buttons",
+		"wayou.vscode-todo-highlight",
+		"mcu-debug.rtos-views",
+		"eamodio.gitlens",
+		"OBKoro1.korofileheader"
+	],
+	"unwantedRecommendations": [
+		"ms-vscode.cpptools"
+	]
+}

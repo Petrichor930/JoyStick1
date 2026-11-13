@@ -1,0 +1,49 @@
+{
+	"terminal.integrated.defaultProfile.windows": "PowerShell",
+	"clangd.arguments": [
+		"--compile-commands-dir=${workspaceFolder}",
+		"--background-index",
+		"--header-insertion=never"
+	],
+	"cortex-debug.variableUseNaturalFormat": true,
+	"files.associations": {
+		"*.h": "c",
+		"*.hpp": "cpp",
+		"*.ioc": "ini"
+	},
+	"actionButtons": {
+		"defaultColor": "white",
+		"loadNpmCommands": false,
+		"reloadButton": "↻",
+		"commands": [
+			{
+				"name": "$(tools)",
+				"color": "none",
+				"singleInstance": true,
+				"command": "cmake -B build -G Ninja; ninja -C build",
+				"tooltip": "配置并编译"
+			},
+			{
+				"name": "$(flame)",
+				"color": "none",
+				"singleInstance": true,
+				"command": "D:/APP/bin/STM32_Programmer_CLI.exe -c port=SWD -e all -w build/cubemax/JoyStick1.hex -v -rst",
+				"tooltip": "ST-Link 烧录（全片擦除 + 校验 + 复位运行）"
+			},
+			{
+				"name": "$(debug-alt)",
+				"color": "none",
+				"singleInstance": true,
+				"command": "openocd -f openocd/dap.cfg -f target/stm32f4x.cfg -c \"program build/cubemax/JoyStick1.elf verify reset exit\"",
+				"tooltip": "DAP-Link 烧录（CMSIS-DAP / OpenOCD）"
+			},
+			{
+				"name": "$(broom)",
+				"color": "none",
+				"singleInstance": true,
+				"command": "cmake --build build --target clean",
+				"tooltip": "清理编译产物（保留 build 目录；本机删除有延迟，别整目录删 build）"
+			}
+		]
+	}
+}
